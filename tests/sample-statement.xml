@@ -1,0 +1,336 @@
+<pmtnotification>
+  <notificationtype>ibank.payment.notification.ledger</notificationtype>
+  <status>
+    <code>0</code>
+    <severity>INFO</severity>
+    <details>
+    </details>
+  </status>
+  <curdef>RSD</curdef>
+  <acctid>190-0000000000101-01</acctid>
+  <stmtnumber>10</stmtnumber>
+  <ledgerbal>
+    <balamt>100017.74</balamt>
+    <dtasof>2026-03-02T00:00:00</dtasof>
+  </ledgerbal>
+  <availbal>
+    <balamt>54787.52</balamt>
+    <dtasof>2026-03-02T00:00:00</dtasof>
+  </availbal>
+  <extension>
+    <headercomment />
+    <footercomment>
+    </footercomment>
+    <headerdetails>
+      <intem order="" label="" value="" />
+    </headerdetails>
+  </extension>
+  <reservedfunds>0.00</reservedfunds>
+  <overdraftremaining>0.00</overdraftremaining>
+  <overdraftused>0.00</overdraftused>
+  <overdraftnir>
+  </overdraftnir>
+  <directdebitreserved>0.00</directdebitreserved>
+  <projectedavail>54787.52</projectedavail>
+  <overdraft>
+    <amount>
+    </amount>
+    <dtasof>
+    </dtasof>
+    <dtasto>
+    </dtasto>
+  </overdraft>
+  <trnlist count="7">
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>639845723402358</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>ALTA BANKA AD-račun provizije</name>
+        <city>
+        </city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>190-0000000000001-11</acctid>
+        <bankid>190</bankid>
+        <bankname>ALTA BANKA A.D. BEOGRAD                                     </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>0.00</trnamt>
+      <purpose>Obračunata provizija u iznosu od 370.53 RSD</purpose>
+      <purposecode>221</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>
+      </payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-03T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>
+      </payeerefmodel>
+      <urgency>INT</urgency>
+      <fee>0.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T00:23:10</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>720934865346235</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>credit</benefit>
+      <payeeinfo>
+        <name>ALTA banka a.d. Beograd, Bulevar Zorana Đinđića 121,</name>
+        <city>11070 N</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>190-0000000000001-12</acctid>
+        <bankid>190</bankid>
+        <bankname>ALTA BANKA A.D. BEOGRAD                                     </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>115500.00</trnamt>
+      <purpose>DIN. PROTIVVREDNOST ZA :EUR 1000 KURS:115.5</purpose>
+      <purposecode>286</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>01000-0067000027869</payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-02T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>
+      </payeerefmodel>
+      <urgency>INT</urgency>
+      <fee>0.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T10:02:17</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>732098454734646</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>Poreska uprava, Save Maškovića 3-5,</name>
+        <city>Beograd</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>840-0000003534543-34</acctid>
+        <bankid>840</bankid>
+        <bankname>KONSOLIDOVANI RAČUN TREZORA                                 </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>120760.00</trnamt>
+      <purpose>Uplata javnih prihoda izuzev poreza i doprinosa po odbitku</purpose>
+      <purposecode>253</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>9384659238469234756</payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-02T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>97</payeerefmodel>
+      <urgency>RTGS</urgency>
+      <fee>98.53</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T11:24:46</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>978324659823745</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>Poreska uprava, Save Maškovića 3-5,</name>
+        <city>Beograd</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>840-0000937869234-39</acctid>
+        <bankid>840</bankid>
+        <bankname>KONSOLIDOVANI RAČUN TREZORA                                 </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>25000.00</trnamt>
+      <purpose>POREZ NA PRIHOD 2026</purpose>
+      <purposecode>253</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>0301390000007788049</payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-02T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>97</payeerefmodel>
+      <urgency>ACH</urgency>
+      <fee>11.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T11:28:03</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>908423758493346</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>ACCOUNTING SERVICES,</name>
+        <city>TRG KOMENSKOG 1 SP</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>160-60000034985734-34</acctid>
+        <bankid>160</bankid>
+        <bankname>BANCA INTESA A.D. BEOGRAD                                   </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>10099.69</trnamt>
+      <purpose>Accounting services</purpose>
+      <purposecode>221</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>23</payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-02T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>
+      </payeerefmodel>
+      <urgency>ACH</urgency>
+      <fee>25.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T11:31:47</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>938745924653345</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>ALTA BANKA AD BEOGRAD - DINA BUSSINES CA,</name>
+        <city>Bulevar Zorana Đin</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>190-0000000000011-23</acctid>
+        <bankid>190</bankid>
+        <bankname>ALTA BANKA A.D. BEOGRAD                                     </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>4500.00</trnamt>
+      <purpose>Kartica 0000000000000000    : COMPANY.CO.RS               BEOGRAD</purpose>
+      <purposecode>220</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>
+      </payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-02T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>
+      </payeerefmodel>
+      <urgency>INT</urgency>
+      <fee>0.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T15:28:59</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+    <stmttrn>
+      <trntype>ibank.payment.pp3</trntype>
+      <fitid>623945693245734</fitid>
+      <trnuid>
+      </trnuid>
+      <benefit>debit</benefit>
+      <payeeinfo>
+        <name>ALTA BANKA AD-račun provizije,</name>
+        <city>,</city>
+      </payeeinfo>
+      <payeeaccountinfo>
+        <acctid>190-0000000000001-44</acctid>
+        <bankid>190</bankid>
+        <bankname>ALTA BANKA A.D. BEOGRAD                                     </bankname>
+      </payeeaccountinfo>
+      <dtposted>2026-03-02T00:00:00</dtposted>
+      <trnamt>370.53</trnamt>
+      <purpose>[AutoProv]Obracun provizije za dan 2026.03.02</purpose>
+      <purposecode>221</purposecode>
+      <curdef>RSD</curdef>
+      <payeerefnumber>
+      </payeerefnumber>
+      <trnplace>0000 Beograd - Centrala</trnplace>
+      <dtuser>2026-03-03T00:00:00</dtuser>
+      <dtavail>2026-03-02T00:00:00</dtavail>
+      <refnumber>
+      </refnumber>
+      <refmodel>
+      </refmodel>
+      <payeerefmodel>
+      </payeerefmodel>
+      <urgency>INT</urgency>
+      <fee>0.00</fee>
+      <statusinfo>
+        <code>80</code>
+        <timeposted>2026-03-02T23:59:59</timeposted>
+      </statusinfo>
+      <orderitemno>
+      </orderitemno>
+      <orderref>
+      </orderref>
+    </stmttrn>
+  </trnlist>
+  <rejected count="0">
+  </rejected>
+</pmtnotification>
