@@ -26,6 +26,13 @@ dependencies = [
   "ofxstatement",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "black",
+    "pytest",
+]
+
 [project.urls]
 Homepage = "https://github.com/fertkir/ofxstatement-rs-altabanka/"
 
