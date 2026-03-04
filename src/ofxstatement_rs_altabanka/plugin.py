@@ -42,8 +42,7 @@ class RsAltabankaParser(StatementParser[str]):
         root = tree.getroot()
 
         statement = Statement(
-            account_id=get_text(root, "acctid"),
-            currency=get_text(root, "curdef")
+            account_id=get_text(root, "acctid"), currency=get_text(root, "curdef")
         )
 
         ledgerbal = root.find("ledgerbal")
@@ -56,7 +55,9 @@ class RsAltabankaParser(StatementParser[str]):
 
         trnlist = root.find("trnlist")
         if trnlist is not None:
-            statement.lines = [self.__parse_transation(trn) for trn in trnlist.findall("stmttrn")]
+            statement.lines = [
+                self.__parse_transation(trn) for trn in trnlist.findall("stmttrn")
+            ]
 
         return statement
 

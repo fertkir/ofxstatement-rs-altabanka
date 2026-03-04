@@ -67,7 +67,10 @@ def test_sample():
     txn_6 = statement.lines[5]
     assert txn_6.id == "938745924653345"
     assert txn_6.date == datetime(2026, 3, 2)
-    assert txn_6.memo == "Kartica 0000000000000000    : COMPANY.CO.RS               BEOGRAD"
+    assert (
+        txn_6.memo
+        == "Kartica 0000000000000000    : COMPANY.CO.RS               BEOGRAD"
+    )
     assert txn_6.amount == Decimal("4500.00")
     assert txn_6.payee == "ALTA BANKA AD BEOGRAD - DINA BUSSINES CA,"
     assert txn_6.trntype == "DEBIT"
