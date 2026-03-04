@@ -80,10 +80,10 @@ class RsAltabankaParser(StatementParser[str]):
         trnamnt = get_decimal(stmttrn, "trnamt")
         if get_text(stmttrn, "benefit") == "debit":
             line.trntype = "DEBIT"
-            line.amount=trnamnt.copy_negate()
+            line.amount = -trnamnt
         elif get_text(stmttrn, "benefit") == "credit":
             line.trntype = "CREDIT"
-            line.amount=trnamnt
+            line.amount = trnamnt
 
         return line
 
