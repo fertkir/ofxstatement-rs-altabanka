@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from datetime import datetime, date
+from datetime import datetime
 from decimal import Decimal
 from typing import Iterable, Optional
 
@@ -25,11 +25,11 @@ def get_decimal(element: Optional[ET.Element], tag: str) -> Decimal:
     return Decimal(text) if text else Decimal("0.0")
 
 
-def get_date(element: Optional[ET.Element], tag: str) -> Optional[date]:
+def get_date(element: Optional[ET.Element], tag: str) -> Optional[datetime]:
     text = get_text(element, tag)
     if not text:
         return None
-    return datetime.strptime(text[:10], "%Y-%m-%d").date()
+    return datetime.fromisoformat(text)
 
 
 class RsAltabankaParser(StatementParser[str]):
