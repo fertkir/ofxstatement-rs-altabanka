@@ -2,13 +2,13 @@
 ofxstatement-rs-altabanka
 =========================================
 
+.. _ofxstatement: https://github.com/kedder/ofxstatement
+
 OFXStatement plugin for AltaBanka (Serbia)
 
-``ofxstatement-rs-altabanka`` is a plugin for ``ofxstatement`` that converts
+``ofxstatement-rs-altabanka`` is a plugin for ofxstatement_ that converts
 AltaBanka (Serbia) bank statements to OFX format, suitable for importing to
 accounting software like GnuCash.
-
-.. _ofxstatement: https://github.com/kedder/ofxstatement
 
 
 Installation
