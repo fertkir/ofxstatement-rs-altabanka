@@ -37,4 +37,4 @@ dev = [
 Homepage = "https://github.com/fertkir/ofxstatement-rs-altabanka/"
 
 [project.entry-points."ofxstatement"]
-sample = "ofxstatement_rs_altabanka.plugin:RsAltabankaPlugin"
+rs-altabanka = "ofxstatement_rs_altabanka.plugin:RsAltabankaPlugin"
