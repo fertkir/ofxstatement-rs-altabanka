@@ -73,9 +73,9 @@ class RsAltabankaParser(StatementParser[str]):
         if payeeinfo is not None:
             line.payee = get_text(payeeinfo, "name")
 
-        refnumber = get_text(stmttrn, "refnumber")
-        if refnumber:
-            line.refnum = refnumber
+        payeerefnumber = get_text(stmttrn, "payeerefnumber")
+        if payeerefnumber:
+            line.refnum = payeerefnumber
 
         trnamnt = get_decimal(stmttrn, "trnamt")
         if get_text(stmttrn, "benefit") == "debit":

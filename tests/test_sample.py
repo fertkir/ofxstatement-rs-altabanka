@@ -30,6 +30,7 @@ def test_sample():
     assert txn_1.memo == "Obračunata provizija u iznosu od 370.53 RSD"
     assert txn_1.amount == Decimal("0.00")
     assert txn_1.payee == "ALTA BANKA AD-račun provizije"
+    assert txn_1.refnum is None
     assert txn_1.trntype == "DEBIT"
 
     txn_2 = statement.lines[1]
@@ -38,6 +39,7 @@ def test_sample():
     assert txn_2.memo == "DIN. PROTIVVREDNOST ZA :EUR 1000 KURS:115.5"
     assert txn_2.amount == Decimal("115500.00")
     assert txn_2.payee == "ALTA banka a.d. Beograd, Bulevar Zorana Đinđića 121,"
+    assert txn_2.refnum == "01000-0067000027869"
     assert txn_2.trntype == "CREDIT"
 
     txn_3 = statement.lines[2]
@@ -46,6 +48,7 @@ def test_sample():
     assert txn_3.memo == "Uplata javnih prihoda izuzev poreza i doprinosa po odbitku"
     assert txn_3.amount == Decimal("-120760.00")
     assert txn_3.payee == "Poreska uprava, Save Maškovića 3-5,"
+    assert txn_3.refnum == "9384659238469234756"
     assert txn_3.trntype == "DEBIT"
 
     txn_4 = statement.lines[3]
@@ -54,6 +57,7 @@ def test_sample():
     assert txn_4.memo == "POREZ NA PRIHOD 2026"
     assert txn_4.amount == Decimal("-25000.00")
     assert txn_4.payee == "Poreska uprava, Save Maškovića 3-5,"
+    assert txn_4.refnum == "0301390000007788049"
     assert txn_4.trntype == "DEBIT"
 
     txn_5 = statement.lines[4]
@@ -62,6 +66,7 @@ def test_sample():
     assert txn_5.memo == "Accounting services"
     assert txn_5.amount == Decimal("-10099.69")
     assert txn_5.payee == "ACCOUNTING SERVICES,"
+    assert txn_5.refnum == "23"
     assert txn_5.trntype == "DEBIT"
 
     txn_6 = statement.lines[5]
@@ -73,6 +78,7 @@ def test_sample():
     )
     assert txn_6.amount == Decimal("-4500.00")
     assert txn_6.payee == "ALTA BANKA AD BEOGRAD - DINA BUSSINES CA,"
+    assert txn_6.refnum is None
     assert txn_6.trntype == "DEBIT"
 
     txn_7 = statement.lines[6]
@@ -81,4 +87,5 @@ def test_sample():
     assert txn_7.memo == "[AutoProv]Obracun provizije za dan 2026.03.02"
     assert txn_7.amount == Decimal("-370.53")
     assert txn_7.payee == "ALTA BANKA AD-račun provizije,"
+    assert txn_7.refnum is None
     assert txn_7.trntype == "DEBIT"
