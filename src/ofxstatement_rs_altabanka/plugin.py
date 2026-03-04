@@ -67,7 +67,6 @@ class RsAltabankaParser(StatementParser[str]):
             id=get_text(stmttrn, "fitid"),
             date=get_date(stmttrn, "dtposted"),
             memo=get_text(stmttrn, "purpose"),
-            amount=get_decimal(stmttrn, "trnamt"),
         )
 
         payeeinfo = stmttrn.find("payeeinfo")
@@ -78,10 +77,13 @@ class RsAltabankaParser(StatementParser[str]):
         if refnumber:
             line.refnum = refnumber
 
+        trnamnt = get_decimal(stmttrn, "trnamt")
         if get_text(stmttrn, "benefit") == "debit":
             line.trntype = "DEBIT"
+            line.amount=trnamnt.copy_negate()
         elif get_text(stmttrn, "benefit") == "credit":
             line.trntype = "CREDIT"
+            line.amount=trnamnt
 
         return line
 

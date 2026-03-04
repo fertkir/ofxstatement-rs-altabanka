@@ -44,7 +44,7 @@ def test_sample():
     assert txn_3.id == "732098454734646"
     assert txn_3.date == datetime(2026, 3, 2)
     assert txn_3.memo == "Uplata javnih prihoda izuzev poreza i doprinosa po odbitku"
-    assert txn_3.amount == Decimal("120760.00")
+    assert txn_3.amount == Decimal("-120760.00")
     assert txn_3.payee == "Poreska uprava, Save Maškovića 3-5,"
     assert txn_3.trntype == "DEBIT"
 
@@ -52,7 +52,7 @@ def test_sample():
     assert txn_4.id == "978324659823745"
     assert txn_4.date == datetime(2026, 3, 2)
     assert txn_4.memo == "POREZ NA PRIHOD 2026"
-    assert txn_4.amount == Decimal("25000.00")
+    assert txn_4.amount == Decimal("-25000.00")
     assert txn_4.payee == "Poreska uprava, Save Maškovića 3-5,"
     assert txn_4.trntype == "DEBIT"
 
@@ -60,7 +60,7 @@ def test_sample():
     assert txn_5.id == "908423758493346"
     assert txn_5.date == datetime(2026, 3, 2)
     assert txn_5.memo == "Accounting services"
-    assert txn_5.amount == Decimal("10099.69")
+    assert txn_5.amount == Decimal("-10099.69")
     assert txn_5.payee == "ACCOUNTING SERVICES,"
     assert txn_5.trntype == "DEBIT"
 
@@ -71,7 +71,7 @@ def test_sample():
         txn_6.memo
         == "Kartica 0000000000000000    : COMPANY.CO.RS               BEOGRAD"
     )
-    assert txn_6.amount == Decimal("4500.00")
+    assert txn_6.amount == Decimal("-4500.00")
     assert txn_6.payee == "ALTA BANKA AD BEOGRAD - DINA BUSSINES CA,"
     assert txn_6.trntype == "DEBIT"
 
@@ -79,6 +79,6 @@ def test_sample():
     assert txn_7.id == "623945693245734"
     assert txn_7.date == datetime(2026, 3, 2)
     assert txn_7.memo == "[AutoProv]Obracun provizije za dan 2026.03.02"
-    assert txn_7.amount == Decimal("370.53")
+    assert txn_7.amount == Decimal("-370.53")
     assert txn_7.payee == "ALTA BANKA AD-račun provizije,"
     assert txn_7.trntype == "DEBIT"
