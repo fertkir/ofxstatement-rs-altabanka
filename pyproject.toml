@@ -23,14 +23,15 @@ classifiers = [
 ]
 keywords = ["ofx", "banking", "statement", "plugin", "ofxstatement"]
 dependencies = [
-  "ofxstatement",
+    "ofxstatement>=0.9.3",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "ruff",
-    "black",
-    "pytest",
+    "black>=25.11.0",
+    "mypy>=1.19.1",
+    "pytest>=8.4.2",
+    "ruff>=0.15.7",
 ]
 
 [project.urls]
