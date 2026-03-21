@@ -10,7 +10,7 @@ from ofxstatement_rs_altabanka.plugin import RsAltabankaPlugin
 def test_sample():
     plugin = RsAltabankaPlugin(UI(), {})
     here = os.path.dirname(__file__)
-    sample_filename = os.path.join(here, "resources/sample-statement.xml")
+    sample_filename = os.path.join(here, "resources/sample-xml-statement.xml")
 
     parser = plugin.get_parser(sample_filename)
     statement = parser.parse()
