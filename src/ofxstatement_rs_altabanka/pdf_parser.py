@@ -106,6 +106,7 @@ def df_to_statement_lines(df: pd.DataFrame):
 
     return result
 
+
 class RsAltabankaPdfParser(StatementParser[str]):
     def __init__(self, filename: str) -> None:
         super().__init__()
@@ -113,24 +114,33 @@ class RsAltabankaPdfParser(StatementParser[str]):
 
     def parse(self) -> Statement:
         tables = self.read_pdf()
+        header = self._get_header(tables)
 
         statement = Statement(
-            account_id="1", currency="EUR"
+            account_id=header["IBAN:"], currency=re.search(r"\b[A-Z]{3}\b", header["Valuta:"]).group()
         )
 
-        statement.start_date = datetime.now()
+        statement.start_date = parse_date(header["Datum izrade izvoda:"])
         statement.start_balance = Decimal("0.00")
 
-        statement.end_date = datetime.now()
+        statement.end_date = statement.start_date
         statement.end_balance = Decimal("1000.00")
 
-        statement.lines = df_to_statement_lines(tables[0].df)
+        statement.lines = df_to_statement_lines(tables[1].df)
 
         return statement
 
+    @staticmethod
+    def _get_header(tables: TableList) -> dict[str, str]:
+        df = tables[0].df
+        return dict(zip(df.iloc[:, 0], df.iloc[:, 1]))
+
     def read_pdf(self) -> TableList:
-        return camelot.read_pdf(self.filename, flavor='stream', table_areas=['10,10,600,600'],
-                                columns=['190,300,410,510'])
+        return camelot.read_pdf(self.filename,
+                                flavor='stream',
+                                table_areas=['10,610,250,680', '10,10,600,600'],
+                                columns=['110', '190,300,410,510'],
+                                split_text=True)
 
     def split_records(self) -> Iterable[str]:
         """Return iterable object consisting of a line per transaction"""
