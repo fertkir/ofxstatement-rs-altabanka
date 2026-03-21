@@ -5,6 +5,7 @@ from typing import Iterable
 
 import camelot
 import pandas as pd
+from camelot.core import TableList
 from ofxstatement.parser import StatementParser
 from ofxstatement.statement import Statement, StatementLine
 
@@ -111,9 +112,7 @@ class RsAltabankaPdfParser(StatementParser[str]):
         self.filename = filename
 
     def parse(self) -> Statement:
-        tables = camelot.read_pdf(self.filename, flavor='stream', table_areas=['10,10,600,600'],
-                               columns=['190,300,410,510'])
-
+        tables = self.read_pdf()
 
         statement = Statement(
             account_id="1", currency="EUR"
@@ -128,6 +127,10 @@ class RsAltabankaPdfParser(StatementParser[str]):
         statement.lines = df_to_statement_lines(tables[0].df)
 
         return statement
+
+    def read_pdf(self) -> TableList:
+        return camelot.read_pdf(self.filename, flavor='stream', table_areas=['10,10,600,600'],
+                                columns=['190,300,410,510'])
 
     def split_records(self) -> Iterable[str]:
         """Return iterable object consisting of a line per transaction"""

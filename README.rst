@@ -44,3 +44,19 @@ Clone the repository and install dependencies::
 Run tests::
 
     make test
+
+If pdf parser adjustments needed:
+
+.. code-block:: python
+
+    from ofxstatement_rs_altabanka.pdf_parser import RsAltabankaPdfParser
+    import os.path
+
+    from matplotlib import pyplot as plt
+    import camelot
+
+    plt.rcParams["figure.figsize"] = (20, 15)
+
+    parser = RsAltabankaPdfParser(os.path.expanduser("~/Downloads/1.pdf"))
+    tables = parser.read_pdf()
+    camelot.plot(tables[0], kind='grid').show()
