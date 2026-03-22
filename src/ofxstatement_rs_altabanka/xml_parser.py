@@ -47,9 +47,7 @@ class RsAltabankaXmlParser(StatementParser[str]):
 
         trnlist = root.find("trnlist")
         if trnlist is not None:
-            statement.lines = [
-                self.__parse_transaction(trn) for trn in trnlist.findall("stmttrn")
-            ]
+            statement.lines = [self.__parse_transaction(trn) for trn in trnlist.findall("stmttrn")]
 
         return statement
 

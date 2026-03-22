@@ -31,15 +31,15 @@ def parse_date(value: str, obj: object | None = None) -> datetime:
 def _get_or_error(d: dict[Any, Any], key: Any) -> Any:
     value = d.get(key)
     if value is None:
-        raise ParseError(0, f"\"{key}\" not found")
+        raise ParseError(0, f'"{key}" not found')
     return value
 
 
 def build_statement_line(tx_rows: pd.DataFrame):
     first_row = tx_rows.iloc[0]
     second_row = tx_rows.iloc[1]
-    first_column_str = re.sub(r'^\d+\.\n', '', ''.join(tx_rows.iloc[:, 0].dropna().astype(str)))
-    first_column_values = [s.strip() for s in first_column_str.split('/')]
+    first_column_str = re.sub(r"^\d+\.\n", "", "".join(tx_rows.iloc[:, 0].dropna().astype(str)))
+    first_column_values = [s.strip() for s in first_column_str.split("/")]
 
     line = StatementLine(
         id=first_column_values[0],
@@ -65,7 +65,7 @@ def build_statement_line(tx_rows: pd.DataFrame):
     return line
 
 
-def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[Hashable]):
+def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[int]):
     # split into chunks
     transactions = []
     for idx, start in enumerate(transaction_starts):
@@ -78,9 +78,16 @@ def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[Hashable]):
     return result
 
 
+def _parse_currency(value: str) -> str:
+    match = re.search(r"\b[A-Z]{3}\b", value)
+    if match is None:
+        raise ParseError(0, f"Couldn't parse currency: {value}")
+    return match.group()
+
+
 @dataclass
 class Structure:
-    transaction_start_row_ids: list[Hashable]
+    transaction_start_row_ids: list[int]
     start_balance: Decimal
     end_balance: Decimal
 
@@ -100,7 +107,7 @@ class RsAltabankaPdfParser(StatementParser[str]):
 
         statement = Statement(
             account_id=_get_or_error(header, "IBAN:"),
-            currency=re.search(r"\b[A-Z]{3}\b", _get_or_error(header, "Valuta:")).group()
+            currency=_parse_currency(_get_or_error(header, "Valuta:")),
         )
 
         statement.start_date = parse_date(_get_or_error(header, "Datum izrade izvoda:"), header)
@@ -123,11 +130,12 @@ class RsAltabankaPdfParser(StatementParser[str]):
         start_balance = None
         end_balance = None
 
-        for i, row in df.iterrows():
+        for i in range(len(df)):
+            row = df.iloc[i]
             if start_balance is None and re.match(r"^Prethodni saldo u valuti", str(row.iloc[1])):
                 start_balance = parse_amount(str(row.iloc[4]))
             elif re.match(r"\d+\.\n", str(row.iloc[0])):
-                transaction_start_row_ids.append(i)
+                transaction_start_row_ids.append(int(i))
             elif end_balance is None and re.match(r"^Novi saldo u valuti", str(row.iloc[1])):
                 end_balance = parse_amount(str(row.iloc[4]))
 
@@ -139,15 +147,17 @@ class RsAltabankaPdfParser(StatementParser[str]):
         return Structure(
             transaction_start_row_ids=transaction_start_row_ids,
             start_balance=start_balance,
-            end_balance=end_balance
+            end_balance=end_balance,
         )
 
     def read_pdf(self) -> TableList:
-        return camelot.read_pdf(self.filename,
-                                flavor='stream',
-                                table_areas=['10,610,250,680', '10,10,600,600'],
-                                columns=['110', '190,300,410,510'],
-                                split_text=True)
+        return camelot.read_pdf(
+            self.filename,
+            flavor="stream",
+            table_areas=["10,610,250,680", "10,10,600,600"],
+            columns=["110", "190,300,410,510"],
+            split_text=True,
+        )
 
     def split_records(self) -> Iterable[str]:
         """Return iterable object consisting of a line per transaction"""
