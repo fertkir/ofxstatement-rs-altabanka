@@ -28,7 +28,7 @@ def parse_date(value: str, obj: Optional[object] = None) -> datetime:
         raise ValidationError(f"Couldn't parse date: {value}", obj)
 
 
-def _get_or_error(d: dict[Any, Any], key: Any) -> Any:
+def _get_or_error(d: dict[str, str], key: str) -> str:
     value = d.get(key)
     if value is None:
         raise ParseError(0, f'"{key}" not found')
@@ -85,6 +85,13 @@ def _parse_currency(value: str) -> str:
     return match.group()
 
 
+def _parse_iban(value: str) -> str:
+    value = value.strip().upper()
+    if not re.fullmatch(r"[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}", value):
+        raise ParseError(0, f"Couldn't parse IBAN: {value}")
+    return value
+
+
 @dataclass
 class Structure:
     transaction_start_row_ids: list[int]
@@ -106,7 +113,7 @@ class RsAltabankaPdfParser(StatementParser[str]):
         structure = self.__get_stmt_structure(tables[1].df)
 
         statement = Statement(
-            account_id=_get_or_error(header, "IBAN:"),
+            account_id=_parse_iban(_get_or_error(header, "IBAN:")),
             currency=_parse_currency(_get_or_error(header, "Valuta:")),
         )
         statement.start_date = parse_date(_get_or_error(header, "Datum izrade izvoda:"), header)
