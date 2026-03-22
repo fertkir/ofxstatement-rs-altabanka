@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from typing import Iterable, Hashable, Any
+from typing import Iterable, Any, Optional
 
 import camelot
 import pandas as pd
@@ -19,7 +19,7 @@ def parse_amount(val):
     return Decimal(val.replace(",", ""))
 
 
-def parse_date(value: str, obj: object | None = None) -> datetime:
+def parse_date(value: str, obj: Optional[object] = None) -> datetime:
     if value is None or value == "":
         raise ValidationError(f"The value is empty, but expected date", obj)
     try:
@@ -109,15 +109,11 @@ class RsAltabankaPdfParser(StatementParser[str]):
             account_id=_get_or_error(header, "IBAN:"),
             currency=_parse_currency(_get_or_error(header, "Valuta:")),
         )
-
         statement.start_date = parse_date(_get_or_error(header, "Datum izrade izvoda:"), header)
         statement.start_balance = structure.start_balance
-
         statement.end_date = statement.start_date
         statement.end_balance = structure.end_balance
-
         statement.lines = df_to_statement_lines(tables[1].df, structure.transaction_start_row_ids)
-
         return statement
 
     @staticmethod
