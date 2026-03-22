@@ -28,14 +28,6 @@ def parse_date(value: str, obj: object | None = None) -> datetime:
         raise ValidationError(f"Couldn't parse date: {value}", obj)
 
 
-def extract_ref_and_id(text):
-    # example: "1.\n0101010101010101 / ref: 232323223232323"
-    match = re.search(r"(\d+)\s*/\s*ref:\s*([\w\-]+)", text)
-    if match:
-        return match.group(1), match.group(2)
-    return None, None
-
-
 def _get_or_error(d: dict[Any, Any], key: Any) -> Any:
     value = d.get(key)
     if value is None:
@@ -45,57 +37,45 @@ def _get_or_error(d: dict[Any, Any], key: Any) -> Any:
 
 def build_statement_line(tx_rows: pd.DataFrame):
     first_row = tx_rows.iloc[0]
-
-    raw_text = str(first_row.iloc[0])
-    txn_id, ref = extract_ref_and_id(raw_text)
-
-    date = parse_date(first_row.iloc[1])
-    date_user = parse_date(first_row.iloc[2])
-
-    debit = parse_amount(first_row.iloc[3])
-    credit = parse_amount(first_row.iloc[4])
-
-    # debit = negative, credit = positive
-    amount = None
-    if debit:
-        amount = -debit
-    elif credit:
-        amount = credit
-
-    # collect memo + payee info
-    memo_parts = []
-    payee = None
-
-    for _, row in tx_rows.iterrows():
-        text = str(row.iloc[1]).strip()
-
-        if not text or text == 'nan':
-            continue
-
-        # detect payee (heuristic)
-        if "/" in text and not payee:
-            payee = text
-
-        # ignore noise
-        if any(skip in text for skip in ["KURS", "Tiket", "ref:", "KOMITENTA"]):
-            continue
-
-        memo_parts.append(text)
-
-    memo = " | ".join(memo_parts)
+    second_row = tx_rows.iloc[1]
+    first_column_str = re.sub(r'^\d+\.\n', '', ''.join(tx_rows.iloc[:, 0].dropna().astype(str)))
+    first_column_values = [s.strip() for s in first_column_str.split('/')]
 
     line = StatementLine(
-        id=txn_id,
-        date=date,
-        memo=memo,
-        amount=amount,
+        id=first_column_values[0],
+        date=parse_date(first_row.iloc[1]),
+        memo=first_column_str,
     )
 
-    line.date_user = date_user
-    line.payee = payee
-    line.refnum = ref
+    line.date_user = parse_date(first_row.iloc[2])
+    line.payee = first_column_values[3]
+
+    debit = parse_amount(second_row.iloc[3])
+    credit = parse_amount(second_row.iloc[4])
+
+    if credit is None or credit == Decimal(0):
+        line.trntype = "DEBIT"
+        line.amount = -debit
+    elif debit is None or debit == Decimal(0):
+        line.trntype = "CREDIT"
+        line.amount = credit
+    else:
+        raise ValidationError("Couldn't find amount", line)
 
     return line
+
+
+def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[Hashable]):
+    # split into chunks
+    transactions = []
+    for idx, start in enumerate(transaction_starts):
+        end = transaction_starts[idx + 1] if idx + 1 < len(transaction_starts) else len(df)
+        transactions.append(df.iloc[start:end])
+
+    # build objects
+    result = [build_statement_line(tx) for tx in transactions]
+
+    return result
 
 
 @dataclass
@@ -129,7 +109,7 @@ class RsAltabankaPdfParser(StatementParser[str]):
         statement.end_date = statement.start_date
         statement.end_balance = structure.end_balance
 
-        statement.lines = self.df_to_statement_lines(tables[1].df, structure.transaction_start_row_ids)
+        statement.lines = df_to_statement_lines(tables[1].df, structure.transaction_start_row_ids)
 
         return statement
 
@@ -145,11 +125,11 @@ class RsAltabankaPdfParser(StatementParser[str]):
 
         for i, row in df.iterrows():
             if start_balance is None and re.match(r"^Prethodni saldo u valuti", str(row.iloc[1])):
-                start_balance = parse_amount(row.iloc[4])
+                start_balance = parse_amount(str(row.iloc[4]))
             elif re.match(r"\d+\.\n", str(row.iloc[0])):
                 transaction_start_row_ids.append(i)
             elif end_balance is None and re.match(r"^Novi saldo u valuti", str(row.iloc[1])):
-                end_balance = parse_amount(row.iloc[4])
+                end_balance = parse_amount(str(row.iloc[4]))
 
         if start_balance is None:
             raise ValidationError("Couldn't parse start balance", None)
@@ -161,19 +141,6 @@ class RsAltabankaPdfParser(StatementParser[str]):
             start_balance=start_balance,
             end_balance=end_balance
         )
-
-    @staticmethod
-    def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[Hashable]):
-        # split into chunks
-        transactions = []
-        for idx, start in enumerate(transaction_starts):
-            end = transaction_starts[idx + 1] if idx + 1 < len(transaction_starts) else len(df)
-            transactions.append(df.iloc[start:end])
-
-        # build objects
-        result = [build_statement_line(tx) for tx in transactions]
-
-        return result
 
     def read_pdf(self) -> TableList:
         return camelot.read_pdf(self.filename,
