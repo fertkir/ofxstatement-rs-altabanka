@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ofxstatement-rs-altabanka"
-version = "0.0.3"
+version = "0.1.0"
 authors = [
   { name="Kirill Fertikov", email="kirill.fertikov@gmail.com" },
 ]
@@ -23,13 +23,18 @@ classifiers = [
 ]
 keywords = ["ofx", "banking", "statement", "plugin", "ofxstatement"]
 dependencies = [
+    "camelot-py>=1.0.9",
     "ofxstatement>=0.9.3",
+    "pandas>=2.3.3",
 ]
 
 [dependency-groups]
 dev = [
     "black>=25.11.0",
+    "ipykernel>=6.31.0",
+    "matplotlib>=3.9.4",
     "mypy>=1.19.1",
+    "pandas-stubs>=2.2.2.240807",
     "pytest>=8.4.2",
     "ruff>=0.15.7",
 ]
@@ -39,3 +44,6 @@ Homepage = "https://github.com/fertkir/ofxstatement-rs-altabanka/"
 
 [project.entry-points."ofxstatement"]
 rs-altabanka = "ofxstatement_rs_altabanka.plugin:RsAltabankaPlugin"
+
+[tool.black]
+line-length = 100
