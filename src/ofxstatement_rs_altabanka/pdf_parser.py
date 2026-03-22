@@ -1,11 +1,13 @@
 import re
+from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from typing import Iterable
+from typing import Iterable, Hashable, Any
 
 import camelot
 import pandas as pd
 from camelot.core import TableList
+from ofxstatement.exceptions import ValidationError, ParseError
 from ofxstatement.parser import StatementParser
 from ofxstatement.statement import Statement, StatementLine
 
@@ -17,10 +19,13 @@ def parse_amount(val):
     return Decimal(val.replace(",", ""))
 
 
-def parse_date(val):
-    if pd.isna(val) or val == "":
-        return None
-    return datetime.strptime(val, "%d.%m.%Y")
+def parse_date(value: str, obj: object | None = None) -> datetime:
+    if value is None or value == "":
+        raise ValidationError(f"The value is empty, but expected date", obj)
+    try:
+        return datetime.strptime(value, "%d.%m.%Y")
+    except ValueError:
+        raise ValidationError(f"Couldn't parse date: {value}", obj)
 
 
 def extract_ref_and_id(text):
@@ -29,6 +34,13 @@ def extract_ref_and_id(text):
     if match:
         return match.group(1), match.group(2)
     return None, None
+
+
+def _get_or_error(d: dict[Any, Any], key: Any) -> Any:
+    value = d.get(key)
+    if value is None:
+        raise ParseError(0, f"\"{key}\" not found")
+    return value
 
 
 def build_statement_line(tx_rows: pd.DataFrame):
@@ -86,25 +98,11 @@ def build_statement_line(tx_rows: pd.DataFrame):
     return line
 
 
-def df_to_statement_lines(df: pd.DataFrame):
-    transaction_starts = []
-
-    # detect transaction start rows
-    for i, row in df.iterrows():
-        val = str(row.iloc[0])
-        if re.match(r"\d+\.\n", val):
-            transaction_starts.append(i)
-
-    # split into chunks
-    transactions = []
-    for idx, start in enumerate(transaction_starts):
-        end = transaction_starts[idx + 1] if idx + 1 < len(transaction_starts) else len(df)
-        transactions.append(df.iloc[start:end])
-
-    # build objects
-    result = [build_statement_line(tx) for tx in transactions]
-
-    return result
+@dataclass
+class Structure:
+    transaction_start_row_ids: list[Hashable]
+    start_balance: Decimal
+    end_balance: Decimal
 
 
 class RsAltabankaPdfParser(StatementParser[str]):
@@ -114,26 +112,68 @@ class RsAltabankaPdfParser(StatementParser[str]):
 
     def parse(self) -> Statement:
         tables = self.read_pdf()
-        header = self._get_header(tables)
+        if len(tables) != 2:
+            raise ParseError(0, f"Expected to parse 2 tables on the pdf, but found {len(tables)}")
+
+        header = self._get_header(tables[0].df)
+        structure = self.__get_stmt_structure(tables[1].df)
 
         statement = Statement(
-            account_id=header["IBAN:"], currency=re.search(r"\b[A-Z]{3}\b", header["Valuta:"]).group()
+            account_id=_get_or_error(header, "IBAN:"),
+            currency=re.search(r"\b[A-Z]{3}\b", _get_or_error(header, "Valuta:")).group()
         )
 
-        statement.start_date = parse_date(header["Datum izrade izvoda:"])
-        statement.start_balance = Decimal("0.00")
+        statement.start_date = parse_date(_get_or_error(header, "Datum izrade izvoda:"), header)
+        statement.start_balance = structure.start_balance
 
         statement.end_date = statement.start_date
-        statement.end_balance = Decimal("1000.00")
+        statement.end_balance = structure.end_balance
 
-        statement.lines = df_to_statement_lines(tables[1].df)
+        statement.lines = self.df_to_statement_lines(tables[1].df, structure.transaction_start_row_ids)
 
         return statement
 
     @staticmethod
-    def _get_header(tables: TableList) -> dict[str, str]:
-        df = tables[0].df
+    def _get_header(df: pd.DataFrame) -> dict[str, str]:
         return dict(zip(df.iloc[:, 0], df.iloc[:, 1]))
+
+    @staticmethod
+    def __get_stmt_structure(df: pd.DataFrame) -> Structure:
+        transaction_start_row_ids = []
+        start_balance = None
+        end_balance = None
+
+        for i, row in df.iterrows():
+            if start_balance is None and re.match(r"^Prethodni saldo u valuti", str(row.iloc[1])):
+                start_balance = parse_amount(row.iloc[4])
+            elif re.match(r"\d+\.\n", str(row.iloc[0])):
+                transaction_start_row_ids.append(i)
+            elif end_balance is None and re.match(r"^Novi saldo u valuti", str(row.iloc[1])):
+                end_balance = parse_amount(row.iloc[4])
+
+        if start_balance is None:
+            raise ValidationError("Couldn't parse start balance", None)
+        if end_balance is None:
+            raise ValidationError("Couldn't parse end balance", None)
+
+        return Structure(
+            transaction_start_row_ids=transaction_start_row_ids,
+            start_balance=start_balance,
+            end_balance=end_balance
+        )
+
+    @staticmethod
+    def df_to_statement_lines(df: pd.DataFrame, transaction_starts: list[Hashable]):
+        # split into chunks
+        transactions = []
+        for idx, start in enumerate(transaction_starts):
+            end = transaction_starts[idx + 1] if idx + 1 < len(transaction_starts) else len(df)
+            transactions.append(df.iloc[start:end])
+
+        # build objects
+        result = [build_statement_line(tx) for tx in transactions]
+
+        return result
 
     def read_pdf(self) -> TableList:
         return camelot.read_pdf(self.filename,

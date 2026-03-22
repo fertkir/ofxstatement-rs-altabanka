@@ -1,3 +1,4 @@
+from ofxstatement.exceptions import ValidationError
 from ofxstatement.parser import StatementParser
 from ofxstatement.plugin import Plugin
 
@@ -13,4 +14,4 @@ class RsAltabankaPlugin(Plugin):
             return RsAltabankaXmlParser(filename)
         if filename.endswith(".pdf"):
             return RsAltabankaPdfParser(filename)
-        raise Exception("Unrecognized file type")
+        raise ValidationError("Unrecognized file type", filename)
